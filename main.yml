@@ -1,0 +1,42 @@
+---
+- name: Ejercicio workshop
+  hosts: all
+  vars:
+    nombre_maquina: laboratorio-5
+    nombre: Ernesto
+  tasks:
+    - name: Instalar apache 
+      become: True
+      package:
+        name: "httpd"
+        state: present
+   
+    - name: Instalar la web
+      become: True
+      template:
+        src: ./templates/home.html.j2
+        dest: /var/www/html/index.html
+
+    - name: Eliminar ficheros de la configuración por defecto
+      file:
+        dest: "{{ item }}"
+        state: absent
+      with_items:
+        - autoindex.conf
+        - userdir.conf
+        - welcome.conf
+        
+
+    - name: Aplicar fichero de configuración de Apache
+      become: True
+      template:
+        src: ./templates/ansible.conf.j2
+        dest: /etc/httpd/conf.d/ansible.conf
+
+    - name: Habilitar el servicio
+      become: True
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+ 
