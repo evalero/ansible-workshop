@@ -1,0 +1,5 @@
+<VirtualHost {{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address']}}>
+    DocumentRoot "/var/www/html"
+    ServerName {{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address']}}
+</VirtualHost>
+
